@@ -27,7 +27,7 @@ def loginCoordinacion2():
 def loginCoordinacionv2():
     return render_template('login/loginCoordinacionv2.html')
 
-#Editar el perfil del estudiante
+#Editar el perfil del estudiante juasjuas
 @app.route('/editarPerfilEstudiante',methods=['POST'])
 def editarPerfilEstudiante():
     matricula = request.form['Matricula']
