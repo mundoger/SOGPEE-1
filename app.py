@@ -26,6 +26,14 @@ def loginCoordinacion2():
 @app.route('/loginCoordinacionv2')
 def loginCoordinacionv2():
     return render_template('login/loginCoordinacionv2.html')
+
+#Editar el perfil del estudiante
+@app.route('/editarPerfilEstudiante',methods=['POST'])
+def editarPerfilEstudiante():
+    matricula = request.form['Matricula']
+    correo = request.form['Correo']
+    return render_template('perfiles/editarPerfilEstudiante.html',Matricula = matricula,Correo = correo)
+
 #Validacion de login del estudiante
 @app.route('/iniciarSesionEstudiante',methods=['POST'])
 def loginEstudiante():
