@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        nav {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        nav button {
+            background-color: #444;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            margin-right: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        nav button:hover, nav button.active {
+            background-color: #3db490;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        label {
+            display: block;
+            padding: 10px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button[type="submit"] {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+        .estudiante-form {
+            border: 1px solid #ddd;
+            padding: 30px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+#txtmin {
+font-size: 12px;          
+color: #808080;          
+font-style: italic;       
+margin-top: 0px;        
+margin-bottom: 0px;      
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <button onclick="showSection('titulo')" class="active">Título</button>
+            <button onclick="showSection('asesor-empresarial')">Empresa / Asesor Empresarial</button>
+            <button onclick="showSection('asesor-academico')">Asesor Académico</button>
+            <button onclick="showSection('estudiante')">Estudiantes</button>
+        </nav>
+
+        <form id="cuestionarioForm" action="/guardartodo" method="post">
+            <div id="titulo" class="section active">
+                <label for="titulo-cuestionario">Título del proyecto:*</label>
+                <input type="text" id="titulo-cuestionario" name="titulocuestionario" required>
+                
+                <label for="num-integrantes">Número de Integrantes:*</label>
+                <input type="number" id="num-integrantes" name="numintegrantes" min="1" max="5" value="1" required>
+                
+                <label for="campo3-titulo">Funcion del proyecto:*</label>
+                <input type="text" id="campo3-titulo" name="FuncionProyecto" required>
+            </div>
+
+            <div id="asesor-empresarial" class="section">
+                <label for="asesor-emp-campo1">Empresa y Asesor:*</label>
+                <p id="txtmin">Seleccionar</p>
+                <select name="AsesorEmpresarial" id="AsesorEpm">
+                    {{cargar | safe}}
+                </select>
+            </div>
+
+            <div id="asesor-academico" class="section">
+                <label for="asesor-aca-campo1">Nombre:*</label>
+                <p id="txtmin">Seleccionar</p>
+                <select name="AsesorAcademico" id="AsesorAcademico">
+                    {{asesorAcademic | safe}}
+                </select>
+            </div>
+
+            <div id="empresa" class="section">
+                    <label for="empresa-autocomplete">Empresa:</label>
+
+            </div>
+
+            <div id="estudiante" class="section">
+                <div id="estudiantes-container"></div>
+                <button type="submit">Asignar</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Actualizar botones de navegación
+            document.querySelectorAll('nav button').forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function createEstudianteForm(index) {
+            return `
+                <div class="estudiante-form">
+                        <h3>Estudiante ${index + 1}</h3>
+                        <label for="estudiante-${index}-campo1">Matricula:</label>
+                        <input type="text" id="estudiante-${index}-campo1" name="estudiante-${index}-campo1" required>
+                </div>
+            `;
+        }
+
+        document.getElementById('num-integrantes').addEventListener('change', function() {
+            const numEstudiantes = this.value;
+            const container = document.getElementById('estudiantes-container');
+            container.innerHTML = '';
+            for (let i = 0; i < numEstudiantes; i++) {
+                container.innerHTML += createEstudianteForm(i);
+            }
+        });
+
+
+
+        // Inicializar el formulario de estudiantes
+        document.getElementById('num-integrantes').dispatchEvent(new Event('change'));
+    </script>    
+</body>
+</html>

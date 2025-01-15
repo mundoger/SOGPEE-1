@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario UPT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/evaluacionEstudiante.css') }}">
+</head>
+<body>
+<header class="container-fluid d-flex justify-content-center p-2">
+    <div class="logoUPT">
+        <a href="/" class="logo-upt">
+            <img src="../static/img/logo_upt.png" alt="Logo UPT" height="80">
+        </a>
+    </div>
+</header><br>
+
+<div class="container">
+    <div class="form-container">
+        <!-- Columna izquierda -->
+        <div class="left-column">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" value="{{Nombre1}} {{Nombre2}}" disabled>
+            </div>
+            <div class="form-group">
+                <label for="matricula">Matrícula:</label>
+                <input type="text" id="matricula" name="matricula" value="{{Matricula}}" disabled>
+            </div>
+            <div class="form-group">
+                <label for="telefono">Teléfono:</label>
+                <input type="tel" id="telefono" name="telefono" value="{{Telefono}}" disabled>
+            </div>
+            <div class="form-group">
+                <label for="correo">Correo:</label>
+                <input type="email" id="correo" name="correo" value="{{Correo}}" disabled>
+            </div>
+           
+        </div>
+        
+            
+        
+        <!-- Divisor vertical -->
+        <div class="divider"></div>
+
+        <div>
+                
+    
+                <!-- Columna derecha -->
+                <div class="right-column">
+                    <div class="form-group">
+                        <label for="parcial">Selecciona parcial</label>
+                        <select id="parcial" name="parcial" required>
+                            <option value="">...Seleccionar...</option>
+                            <option value="Parcial1">Parcial 1</option>
+                            <option value="Parcial2">Parcial 2</option>
+                            <option value="Parcial3">Parcial 3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="titulo">Título del proyecto</label>
+                        <input type="text" value="{{proyecto}}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="asesor">Asesor empresarial</label>
+                        <input type="text" value="{{asesor}}" disabled>
+                        
+                    </div>
+                    
+                  
+                    
+                    
+                    
+    
+                    <h3 class="section-title">Enviar expediente</h3>
+                    <div class="buttons-container">
+                        <form id="form-cartas" action="/enviarDocumentos" method="POST" enctype="multipart/form-data">
+                            <label for="file-cartas" class="btn btn-cartas">Cartas
+                                <div class="loading-bar" id="loading-bar"></div>
+                            </label>
+                            <input type="file" name="cartas" id="file-cartas" class="file-input" accept=".pdf" onchange="submitForm('form-cartas')">
+                            <input type="hidden" name="parcialR" id="resultado" value="">
+                            <input type="hidden" id="nombre" name="nombre" value="{{Nombre1}}{{Nombre2}}">
+                            <input type="hidden" id="matricula" name="matricula" value="{{Matricula}}">
+                            <input type="hidden" id="correo" name="correo" value="{{Correo}}">
+                            <input type="hidden" value="{{proyecto}}" name="proyectoR">
+
+                        </form>
+                        
+                        <form id="form-evaluacion" action="/enviarDocumentos" method="POST" enctype="multipart/form-data">
+                            <label for="file-evaluacion" class="btn btn-evaluacion">Evaluación 03
+                                <div class="loading-bar03" id="loading-bar03"></div>
+                            </label>
+                            <input type="file" name="evaluacion3" id="file-evaluacion" class="file-input" accept=".pdf" onchange="submitForm('form-evaluacion')">
+                            <input type="hidden" name="parcialR" id="resultado2" value="">
+                            <input type="hidden" id="nombre" name="nombre" value="{{Nombre1}}{{Nombre2}}">
+                            <input type="hidden" id="matricula" name="matricula" value="{{Matricula}}">
+                            <input type="hidden" id="correo" name="correo" value="{{Correo}}">
+                            <input type="hidden" value="{{proyecto}}" name="proyectoR">
+
+                        </form>
+                        
+                        <form id="form-proyecto" action="/enviarDocumentos" method="POST" enctype="multipart/form-data">
+                            <label for="file-proyecto" class="btn btn-proyecto">Proyecto
+                                <div class="loading-barProyecto" id="loading-barProyecto"></div>
+                            </label>
+                            <input type="file" name="proyecto" id="file-proyecto" class="file-input" accept=".pdf" onchange="submitForm('form-proyecto')">
+                            <input type="hidden" name="parcialR" id="resultado3" value="">
+                            <input type="hidden" id="nombre" name="nombre" value="{{Nombre1}}{{Nombre2}}">
+                            <input type="hidden" id="matricula" name="matricula" value="{{Matricula}}">
+                            <input type="hidden" id="correo" name="correo" value="{{Correo}}">
+                            <input type="hidden" value="{{proyecto}}" name="proyectoR">
+
+                        </form>
+                        
+                        
+                        
+                        
+                    </div>
+    
+                </div>
+            
+            <div class="encuesta-container">
+                <form action="/encuestaSatisfaccion" method="post">
+                    <h3 class="section-title">Encuesta de satisfacción</h3>
+                    <input type="hidden" name="Matricula" value="{{Matricula}}">
+                    <input type="hidden" id="correo" name="correo" value="{{Correo}}">
+                    <button class="btn btn-evaluar" name="accion" value="evaluar">Evaluar</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const fileInput = document.getElementById("file-cartas");
+    const fileInput03 = document.getElementById("file-evaluacion");
+    const fileInputProyecto = document.getElementById("file-proyecto");
+    const loadingBar = document.getElementById("loading-bar");
+    const loadingBar03 = document.getElementById("loading-bar03");
+    const loadingBarProyecto = document.getElementById("loading-barProyecto");
+    const button = document.querySelector(".btn-cartas");
+    const button03 = document.querySelector(".btn-evaluacion");
+    const buttonProyecto = document.querySelector(".btn-proyecto");
+
+
+    fileInput.addEventListener("change", function () {
+        if (fileInput.files.length > 0) {
+            button.classList.add("loading");
+            loadingBar.style.animation = "load 6s linear infinite";
+                setTimeout(() => {
+                loadingBar.style.animation = "none";
+                loadingBar.style.left = "-100%"; 
+                button.classList.remove("loading");
+                alert("Archivo enviado: " + fileInput.files[0].name);
+            }, 3000);
+        }
+    });
+
+    fileInput03.addEventListener("change", function () {
+        if (fileInput03.files.length > 0) {
+            button03.classList.add("loading03");
+            loadingBar03.style.animation = "load 6s linear infinite";
+                setTimeout(() => {
+                loadingBar03.style.animation = "none";
+                loadingBar03.style.left = "-100%"; 
+                button03.classList.remove("loading03");
+                alert("Archivo enviado: " + fileInput.files[0].name);
+            }, 3000);
+        }
+    });
+
+
+    fileInputProyecto.addEventListener("change", function () {
+        if (fileInputProyecto.files.length > 0) {
+            buttonProyecto.classList.add("loadingProyecto");
+            loadingBarProyecto.style.animation = "load 6s linear infinite";
+                setTimeout(() => {
+                loadingBarProyecto.style.animation = "none";
+                loadingBarProyecto.style.left = "-100%"; 
+                buttonProyecto.classList.remove("loadingProyecto");
+                alert("Archivo enviado: " + fileInput.files[0].name);
+            }, 3000);
+        }
+    });
+
+
+
+            // Referenciar el select y el span
+    const selectElement = document.getElementById('parcial');
+    const selectElement2 = document.getElementById('parcial');
+    const selectElement3 = document.getElementById('parcial');
+    const resultadoSpan = document.getElementById('resultado');
+    const resultadoSpan2 = document.getElementById('resultado2');
+    const resultadoSpan3 = document.getElementById('resultado3');
+
+    selectElement.addEventListener('change', function() {
+    const textoSeleccionado = selectElement.options[selectElement.selectedIndex].value;
+    resultadoSpan.value = textoSeleccionado !== "--Selecciona una opción--" ? textoSeleccionado : "Ninguno";
+        });
+
+    selectElement2.addEventListener('change', function() {
+    const textoSeleccionado2 = selectElement2.options[selectElement2.selectedIndex].value;
+    resultadoSpan2.value = textoSeleccionado2 !== "--Selecciona una opción--" ? textoSeleccionado2 : "Ninguno";
+        });
+
+
+    selectElement3.addEventListener('change', function() {
+    const textoSeleccionado3 = selectElement3.options[selectElement3.selectedIndex].value;
+    resultadoSpan3.value = textoSeleccionado3 !== "--Selecciona una opción--" ? textoSeleccionado3 : "Ninguno";
+        });
+</script>
+
+<script>
+    function submitForm(formId) {
+        // Evitar enviar varios formularios a la vez
+        const form = document.getElementById(formId);
+        if (form) {
+            form.submit();
+        }
+    }
+</script>
+
+</body>
+</html>
